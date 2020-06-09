@@ -1,88 +1,50 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { MdAddShoppingCart } from 'react-icons/md'
+import { formatPrice } from '../../util/format';
 
- import { ProductList } from './styles';
+import api from '../../services/api';
 
-export default function Home() {
-  return (
-  <ProductList>
-    <li>
-      <img src="https://images.lojanike.com.br/320x320/produto/217943_1996808_20200303171118.jpg" alt=""/>
-      <strong>Tênis Nike Revolution 5 Masculino</strong>
-      <span>R$180,00</span>
+import { ProductList } from './styles';
 
-      <button type="button">
-        <div>
-          <MdAddShoppingCart size={16} color="#fff" /> 3
-        </div>
-        <span>ADICIONAR AO CARRINHO</span>
-      </button>
-    </li>
+export default class Home extends Component {
+  state = {
+    products: [],
+  }
 
-    <li>
-      <img src="https://images.lojanike.com.br/320x320/produto/217943_1996808_20200303171118.jpg" alt=""/>
-      <strong>Tênis Nike Revolution 5 Masculino</strong>
-      <span>R$180,00</span>
+  async componentDidMount() {
+    const response = await api.get('products');
 
-      <button type="button">
-        <div>
-          <MdAddShoppingCart size={16} color="#fff" /> 3
-        </div>
-        <span>ADICIONAR AO CARRINHO</span>
-      </button>
-    </li>
+    const data  = response.data.map(product => ({
+      ...product,
+      priceFormatted: formatPrice(product.price),
+    }));
 
-    <li>
-      <img src="https://images.lojanike.com.br/320x320/produto/217943_1996808_20200303171118.jpg" alt=""/>
-      <strong>Tênis Nike Revolution 5 Masculino</strong>
-      <span>R$180,00</span>
+    this.setState({ products: data });
+  }
 
-      <button type="button">
-        <div>
-          <MdAddShoppingCart size={16} color="#fff" /> 3
-        </div>
-        <span>ADICIONAR AO CARRINHO</span>
-      </button>
-    </li>
+  render() {
+    const { products } = this.state;
 
-    <li>
-      <img src="https://images.lojanike.com.br/320x320/produto/217943_1996808_20200303171118.jpg" alt=""/>
-      <strong>Tênis Nike Revolution 5 Masculino</strong>
-      <span>R$180,00</span>
+    return (
+      <ProductList>
+        { products.map(product => (
+          <li key={product.id}>
+          <img 
+            src={product.image}
+            alt={product.title} 
+          />
+          <strong>{product.title}</strong>
+          <span>{product.priceFormatted}</span>
 
-      <button type="button">
-        <div>
-          <MdAddShoppingCart size={16} color="#fff" /> 3
-        </div>
-        <span>ADICIONAR AO CARRINHO</span>
-      </button>
-    </li>
-
-    <li>
-      <img src="https://images.lojanike.com.br/320x320/produto/217943_1996808_20200303171118.jpg" alt=""/>
-      <strong>Tênis Nike Revolution 5 Masculino</strong>
-      <span>R$180,00</span>
-
-      <button type="button">
-        <div>
-          <MdAddShoppingCart size={16} color="#fff" /> 3
-        </div>
-        <span>ADICIONAR AO CARRINHO</span>
-      </button>
-    </li>
-
-    <li>
-      <img src="https://images.lojanike.com.br/320x320/produto/217943_1996808_20200303171118.jpg" alt=""/>
-      <strong>Tênis Nike Revolution 5 Masculino</strong>
-      <span>R$180,00</span>
-
-      <button type="button">
-        <div>
-          <MdAddShoppingCart size={16} color="#fff" /> 3
-        </div>
-        <span>ADICIONAR AO CARRINHO</span>
-      </button>
-    </li>
-  </ProductList>
-  );
+          <button type="button">
+            <div>
+              <MdAddShoppingCart size={16} color="#fff" /> 3
+            </div>
+            <span>ADICIONAR AO CARRINHO</span>
+          </button>
+        </li>
+        )) }
+      </ProductList>
+    );
+  }
 }
