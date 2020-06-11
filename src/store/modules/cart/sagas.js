@@ -5,7 +5,7 @@ import api from '../../../services/api';
 import { formatPrice } from '../../../util/format';
 import { addToSuccess, updateAmountSuccess } from './action'
 
-
+//usado na Home
 function* addToCart({ id }) {
     const productExists = yield select(
         state => state.cart.find(p => p.id === id),
@@ -24,7 +24,6 @@ function* addToCart({ id }) {
     }
 
     if (productExists) {
-
         yield put(updateAmountSuccess(id, amount));
     } else {
         const response = yield call(api.get, `/products/${id}`);
@@ -39,7 +38,7 @@ function* addToCart({ id }) {
     }
 }
 
-
+//usado no Cart
 function* updateAmount({ id, amount }) {
     if (amount <= 0) return;
     
